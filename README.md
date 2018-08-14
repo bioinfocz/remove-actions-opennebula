@@ -34,7 +34,7 @@ optional arguments:
 
 ```
 
-*Note: if provided, `actions` parameter must be the last.*
+*Note: if provided, `actions` parameter must be the last one.*
 
 ### Example
 ```bash
