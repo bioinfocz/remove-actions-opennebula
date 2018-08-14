@@ -6,12 +6,6 @@ Remove actions from OpenNebula virtual machine, e.g. `terminate`, `stop` etc. Te
 ## Installation
 Run `$ ./install.sh` as root.
 
-In case of manual installation you need:
-- Python 3
-- [chromedriver](http://chromedriver.chromium.org/)
-
-Then run `$ python setup.py install` (also installs [selenium](https://pypi.org/project/selenium/) Python library).
-
 ## Usage
 After installation you can use `remove_actions_opennebula` from shell.
 ```bash
