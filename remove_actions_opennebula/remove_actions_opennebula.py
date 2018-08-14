@@ -33,15 +33,16 @@ def cli():
     driver.find_element_by_id('check_remember').click()
     driver.find_element_by_id('login_btn').click()
 
-    driver.implicitly_wait(2)
+    driver.implicitly_wait(5)
     driver.find_element_by_id('li_instances-top-tab').find_element_by_tag_name('a').click()
-    driver.implicitly_wait(2)
+    driver.implicitly_wait(5)
     driver.find_element_by_id('li_vms-tab').find_element_by_tag_name('a').click()
-    driver.implicitly_wait(2)
+    driver.implicitly_wait(5)
     driver.find_element_by_css_selector('button[data-toggle="dataTableVmsSearch-dropdown"]').click()
     driver.find_element_by_css_selector('input[search-field="NAME"]').send_keys(args['vm_name'])
     driver.find_element_by_css_selector('input[search-field="UNAME"]').send_keys(args['username'])
     driver.find_element_by_css_selector('button.advanced-search').click()
+    driver.implicitly_wait(5)
 
     vm_table = driver.find_element_by_id('dataTableVms')
     if vm_table.find_element_by_css_selector('tbody tr:first-child td').text == 'No matching records found':
@@ -49,25 +50,40 @@ def cli():
         exit()
 
     vm_table.find_element_by_css_selector('tbody tr:first-child').click()
+    driver.implicitly_wait(5)
     driver.find_element_by_id('vm_actions_tab-label').click()
-    actions_table = driver.find_element_by_id('scheduling_actions_table')
+    driver.implicitly_wait(5)
 
-    if actions_table.find_element_by_css_selector('tbody tr:first-child td').text == 'No actions to show':
+    get_actions_table = lambda: driver.find_element_by_id('scheduling_actions_table')
+
+    if get_actions_table().find_element_by_css_selector('tbody tr:first-child td').text == 'No actions to show':
         print('No actions for VM found. Exiting...')
         exit()
 
-    found = False
+    to_remove = []
 
-    for action in actions_table.find_elements_by_css_selector('tbody tr'):
-        el = action.find_element_by_css_selector('td.action_row')
-        if el.text in args['actions']:
-            print("Found '{}' action. Removing...".format(el.text))
-            el.find_element_by_xpath('../td/div/a').click()
-            found = True
-            print('Done!')
+    for action in get_actions_table().find_elements_by_css_selector('tbody tr'):
+        action_type = action.find_element_by_css_selector('td.action_row')
+        datetime = action.find_element_by_css_selector('td.time_row')
 
-    if not found:
+        if action_type.text in args['actions']:
+            to_remove.append({'id': action_type.find_element_by_xpath('../td/div/a').get_attribute('id'),
+                              'type': action_type.text,
+                              'datetime': datetime.text})
+
+    if not to_remove:
         print('No matching actions ({}) were found'.format(args['actions']))
+        exit()
+
+    for action in to_remove:
+        driver.find_element_by_id(action['id']).click()
+        driver.implicitly_wait(5)
+        print("Removed action '{}' sheduled at '{}'".format(action['type'], action['datetime']))
+        driver.refresh()
+        driver.implicitly_wait(5)
+        driver.find_element_by_id('vm_actions_tab-label').click()
+
+    print('Done! Exiting...')
 
 
 if __name__ == "__main__":
