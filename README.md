@@ -45,4 +45,9 @@ optional arguments:
 ### Example
 ```bash
 $ remove_actions_opennebula <username> <password> <vm_name> -a stop release
+Logged in!
+Removed action 'terminate' sheduled at '01:00:00 01/01/2020'
+Removed action 'stop' sheduled at '01:00:00 01/02/2020'
+Removed action 'terminate' sheduled at '01:00:00 01/02/2021'
+Done! Exiting...
 ```
