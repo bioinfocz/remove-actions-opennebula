@@ -1,5 +1,5 @@
 # remove-actions-opennebula
-Remove actions from OpenNebula virtual machine, e.g. `terminate`, `stop` etc. Tested on OpenNebula 5.2.1+
+Remove scheduled actions from OpenNebula virtual machine, e.g. `terminate`, `stop` etc. Tested on OpenNebula 5.2.1+
 
 ![actions](https://ctrlv.cz/shots/2018/08/14/1tMw.png)
 
